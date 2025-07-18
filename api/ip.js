@@ -1,10 +1,9 @@
-// api/ip.js
-export default function handler(req, res) {
-  const ip =
-    req.headers['x-forwarded-for'] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    (req.connection.socket ? req.connection.socket.remoteAddress : null);
-
-  res.status(200).json({ ip });
+export default async function handler(req, res) {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const data = await response.json();
+    res.status(200).json({ ip: data.ip });
+  } catch (error) {
+    res.status(500).json({ error: 'Gagal ambil IP server' });
+  }
 }
